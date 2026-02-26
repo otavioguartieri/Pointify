@@ -37,7 +37,7 @@ footer .action{
     height: var(--footerHeight);
     aspect-ratio: 1/1 ;
     overflow: hidden;
-    border-radius: calc(var(--footerHeight)/4);
+    border-radius: 100%;
     border: none;
     background-color: transparent;
     color: #555;
@@ -45,12 +45,12 @@ footer .action{
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    bottom: 0;
 }
 footer .action.active{
-    background-color: var(--footerButtonBackground);
-    border-radius: 100%;
-    height: calc(var(--footerHeight)*0.88);
-    bottom: calc(var(--footerHeight)/2 - var(--footerHeight)*0.25);
+    bottom: calc(var(--footerHeight)/2);
 }
 .bubbleContent{
     position: absolute;
@@ -60,37 +60,60 @@ footer .action.active{
     left: -50%;
     bottom: 0%;
 }
+.bubbleContent .bubbleElem{
+    position: absolute;
+    height: var(--footerHeight);
+    bottom: calc(var(--footerHeight)/2);
+    z-index: 5;
+    aspect-ratio: 1/1 ;
+    overflow: hidden;
+    border-radius: 100%;
+    background-color: var(--footerButtonBackground);
+    left: 50%;
+    transform: translateX(-50%);
+}
 .bubbleContent .bubbleLeft, .bubbleContent .bubbleRight{
     position: absolute;
     z-index: 3;
-    width: calc(50% - var(--footerHeight)/4 - var(--footerHeight)*0.1);
+    width: calc(50%);
     height: 100%;
     bottom: 0%;
     background-color: var(--footerBackground);
 }
-.bubbleContent .bubbleRight::after, .bubbleContent .bubbleLeft::after{
+.bubbleContent .bubbleLeft{
+    right: calc(50% + var(--footerHeight)*0.54);
+    border-top-right-radius: calc(var(--footerHeight)*0.25);
+}
+.bubbleContent .bubbleRight{
+    left:  calc(50% + var(--footerHeight)*0.54);
+    border-top-left-radius:  calc(var(--footerHeight)*0.25);
+}
+
+.bubbleContent .bubbleCenter{
+    position: absolute;
+    z-index: 2;
+    width: calc(var(--footerHeight)*1.1);
+    height: calc(var(--footerHeight)*0.8);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    overflow: hidden;
+}
+.bubbleContent .bubbleCenter .scoopLeft::after, .bubbleContent .bubbleCenter .scoopRight::after{
     content: '';
     position: absolute;
     z-index: 2;
-    width: calc(var(--footerHeight)*0.55);
-    height: calc(var(--footerHeight)*0.74);
+    width: calc(var(--footerHeight)*0.58);
+    height: calc(var(--footerHeight)*1);
     corner-shape: scoop;
     bottom: 0;
     background-color: var(--footerBackground);
 }
-.bubbleContent .bubbleLeft{
-    right: calc(50% + var(--footerHeight)/2 + var(--footerHeight)*0.05);
-    border-top-right-radius: calc(var(--footerHeight)*0.3);
+.bubbleContent .bubbleCenter .scoopLeft::after{
+    border-top-right-radius: calc(var(--footerHeight)*0.7);
+    left:calc(var(--footerHeight)*-0.02);
 }
-.bubbleContent .bubbleLeft::after{
-    border-top-right-radius: calc(var(--footerHeight)*0.6);
-    left: 100%;
-}
-.bubbleContent .bubbleRight{
-    left:  calc(50% + var(--footerHeight)/2 + var(--footerHeight)*0.05);
-    border-top-left-radius:  calc(var(--footerHeight)*0.3);
-}
-.bubbleContent .bubbleRight::after{
-    border-top-left-radius: calc(var(--footerHeight)*0.6);
-    right: 100%;
+.bubbleContent .bubbleCenter .scoopRight::after{
+    border-top-left-radius: calc(var(--footerHeight)*0.7);
+    right:calc(var(--footerHeight)*-0.02);
 }
