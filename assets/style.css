@@ -1,0 +1,96 @@
+:root{
+    --appBackground: #e0e0e0;
+    --headerHeight: 64px;
+    --footerHeight: 70px;
+    --footerBackground: #fff;
+    --footerButtonBackground: #ff9100;
+}
+
+html, body{
+    height:100%;
+    width:100%;
+    position: relative;
+    background-color: var(--appBackground);
+    margin: 0;
+    overflow-x: hidden;
+}
+header{
+    height: var(--headerHeight);
+    width: 100%;
+    background-color: red;
+}
+.mainContent{
+    height: calc(100% - var(--headerHeight) - var(--footerHeight));
+}
+footer{
+    height: var(--footerHeight);
+    width: 100%;
+    background-color: transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+footer .action{
+    z-index: 9;
+    position: relative;
+    height: var(--footerHeight);
+    aspect-ratio: 1/1 ;
+    overflow: hidden;
+    border-radius: calc(var(--footerHeight)/4);
+    border: none;
+    background-color: transparent;
+    color: #555;
+    font-size: calc(var(--footerHeight)*0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+footer .action.active{
+    background-color: var(--footerButtonBackground);
+    border-radius: 100%;
+    height: calc(var(--footerHeight)*0.88);
+    bottom: calc(var(--footerHeight)/2 - var(--footerHeight)*0.25);
+}
+.bubbleContent{
+    position: absolute;
+    z-index: 1;
+    width: 200%;
+    height: 100%;
+    left: -50%;
+    bottom: 0%;
+}
+.bubbleContent .bubbleLeft, .bubbleContent .bubbleRight{
+    position: absolute;
+    z-index: 3;
+    width: calc(50% - var(--footerHeight)/4 - var(--footerHeight)*0.1);
+    height: 100%;
+    bottom: 0%;
+    background-color: var(--footerBackground);
+}
+.bubbleContent .bubbleRight::after, .bubbleContent .bubbleLeft::after{
+    content: '';
+    position: absolute;
+    z-index: 2;
+    width: calc(var(--footerHeight)*0.55);
+    height: calc(var(--footerHeight)*0.74);
+    corner-shape: scoop;
+    bottom: 0;
+    background-color: var(--footerBackground);
+}
+.bubbleContent .bubbleLeft{
+    right: calc(50% + var(--footerHeight)/2 + var(--footerHeight)*0.05);
+    border-top-right-radius: calc(var(--footerHeight)*0.3);
+}
+.bubbleContent .bubbleLeft::after{
+    border-top-right-radius: calc(var(--footerHeight)*0.6);
+    left: 100%;
+}
+.bubbleContent .bubbleRight{
+    left:  calc(50% + var(--footerHeight)/2 + var(--footerHeight)*0.05);
+    border-top-left-radius:  calc(var(--footerHeight)*0.3);
+}
+.bubbleContent .bubbleRight::after{
+    border-top-left-radius: calc(var(--footerHeight)*0.6);
+    right: 100%;
+}
