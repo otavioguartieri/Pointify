@@ -1,6 +1,7 @@
 $(document).ready(function(){
     setCssBase();
     setNavPosition('create');
+    task.update();
 
     $('footer button.action').on('click', function(){
         $('footer button.action').removeClass('active');
@@ -68,11 +69,85 @@ function setNavPosition(act){
         default: break;
     }
 }
-function createTask(title, reward, daily, from, id){
-    if(title.length < 1 || reward.length < 1) return modal(false, 'Por favor, preencha todos os campos.',{center:true});
-    if(from == 'modal'){
-        $('#modalOverlay' + id).remove();
-        $('#modal' + id).remove();
+const task = {
+    create(title, reward, daily, from, id){
+        if(title.length < 1 || reward.length < 1) return modal(false, 'Por favor, preencha todos os campos.',{center:true});
+        if(from == 'modal'){
+            task.save(title, reward, daily);
+            $('#modalOverlay' + id).remove();
+            $('#modal' + id).remove();
+        }
+        setTimeout(() => {
+            task.update();
+        }, 500);
+    },
+    delete(name) {
+        const STORAGE_KEY = 'taskList';
+
+        let data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return;
+
+        data = JSON.parse(data);
+
+        delete data[name];
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    },
+    update() {
+        let taskList = task.get();
+        let html = '';
+
+        if (!taskList || Object.keys(taskList).length === 0) {
+            $('.taskList').html('<p>Nenhuma tarefa cadastrada</p>');
+            return;
+        }
+
+        $.each(taskList, function(taskName, taskItem){
+
+            html += `
+                <div class="task" onclick="task.complete($(this))">
+                    <span class="info">
+                        <span class="name">${taskName}</span>
+                        <span class="points">
+                            +${taskItem.value}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M13 2l0 6h5l-8 11v-6h-5z"/>
+                            </svg>
+                        </span>
+                    </span>
+                    <span class="checkBox"></span>
+                </div>
+            `;
+        });
+        $('.taskList').html(html);
+    },
+    save(name, value, daily, sub) {
+        const STORAGE_KEY = 'taskList';
+
+        let data = localStorage.getItem(STORAGE_KEY);
+        data = data ? JSON.parse(data) : {};
+
+        data[name] = {
+            value: value,
+            daily: !!daily,
+            sub: sub
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    },
+    get(){
+        const STORAGE_KEY = 'taskList';
+
+        let data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return null;
+
+        data = JSON.parse(data);
+
+        return data || null;
+    },
+    complete(el){
+        if(el.hasClass('completed')) return $(el).removeClass('completed');
+            $(el).addClass('completed');
     }
 }
 function modal(act, content, confirm = {}, cancel = {}) {
@@ -134,11 +209,11 @@ function modal(act, content, confirm = {}, cancel = {}) {
         $(`#modal${actualTime} .modalInfo`).html(`
             <span class="taskTitle">Nova Missão</span>
             <input type="text" placeholder="Título da missão" id="taskTitle">
-            <input class="taskRewardInput" type="text" placeholder="Recompensa" id="taskReward">
+            <input class="taskRewardInput" type="number" placeholder="Recompensa" id="taskReward">
             <span><input type="checkbox" checked id="taskDaily" name="taskDaily" value="daily"><label for="taskDaily">Resgatável apenas 1 vez por dia</label></span>
         `).css({
             'flex-direction': 'column'
         });
-        $(`#modal${actualTime} .modalContent .actions button.confirm`).text('Criar').attr('onclick', `createTask($('#taskTitle').val(), $('#taskReward').val(), $('#taskDaily').is(':checked'), 'modal', '${actualTime}');`);
+        $(`#modal${actualTime} .modalContent .actions button.confirm`).text('Criar').attr('onclick', `task.create($('#taskTitle').val(), $('#taskReward').val(), $('#taskDaily').is(':checked'), 'modal', '${actualTime}');`);
     }
 }
